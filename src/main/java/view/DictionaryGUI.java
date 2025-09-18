@@ -2,54 +2,30 @@ package view;
 
 import controller.DictionaryController;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.geometry.Pos;
+import javafx.scene.layout.FlowPane;
 import javafx.geometry.Insets;
-import javafx.stage.Stage;
 
 public class DictionaryGUI extends Application {
 
     private DictionaryController controller;
 
-    @Override
-    public void init() {
-        controller = new DictionaryController();
-    }
-
-    @Override
     public void start(Stage stage) {
 
-        // Input field
-        TextField wordInput = new TextField();
-        wordInput.setPromptText("🔎 Enter a word");
-        wordInput.setMaxWidth(250);
+        /// GUI components (Button, TextField, Label, Spinner, etc.)
 
-        // Result label
-        VBox layout = getVBox(wordInput);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: rgba(47, 79, 79); ");
+        // Step 1: TextField, Label, Button
+        TextField wordInput = new TextField();            /// text field to enter the word to search
+        wordInput.setPromptText("Enter word: ");          /// prompt text for the input field
 
-        // Scene with CSS
-        Scene scene = new Scene(layout, 450, 220);
-        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        Label resultLabel = new Label("Meaning will be shown here");  /// label to display the result
 
-        stage.setTitle("Dictionary");
-        stage.setScene(scene);
-        stage.show();
-    }
+        Button searchButton = new Button("Search word");            /// button to search for a word
 
-    private VBox getVBox(TextField wordInput) {
-        Label resultLabel = new Label("Meaning will appear here");
-        resultLabel.setWrapText(true);
-        resultLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
-
-        // Search button
-        Button searchButton = new Button("Search");
+        // Step 2: event handler for the button click event. When the button is clicked, it retrieves the word from the text field, calls the controller to search for the word, and updates the result label with the meaning.
         searchButton.setOnAction(e -> {
             String word = wordInput.getText().trim();
             if (word.isEmpty()) {
@@ -60,8 +36,22 @@ public class DictionaryGUI extends Application {
             }
         });
 
-        // Layout
-        VBox layout = new VBox(15, wordInput, searchButton, resultLabel);
-        return layout;
+        // Step 3: Layout using FlowPane and adding components to it:
+        FlowPane pane = new FlowPane(10, 10);                                     /// layout pane
+        /// add outside margins for components
+        pane.setPadding(new Insets(10, 10, 10, 10));         /// padding around the pane
+        pane.getChildren().addAll(wordInput, searchButton, resultLabel);
+
+        // Step 4: Initialize the controller and show the stage
+        /// set the stage title, scene and show the stage
+        stage.setScene(new javafx.scene.Scene(pane, 400, 150));
+        stage.setTitle("Words Dictionary Finder");
+        stage.show();
     }
+
+    @Override
+    public void init() {
+        controller = new DictionaryController();  // Initialize the controller in the init method
+    }
+
 }
